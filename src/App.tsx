@@ -22,12 +22,12 @@ function App() {
     client.models.Todo.create({ content: window.prompt("Todo content") });
   }
 
-  function chatapi() {
-    const reply = client.queries.chatapi({
+  async function chatapi() {
+    const reply = await client.queries.chatapi({
       message: "Hello",
     })
-    if(reply !== null) {
-      setChatMessage(reply)
+    if(reply.data !== null) {
+      setChatMessage(reply.data)
     }
   }
 

@@ -14,7 +14,8 @@ const schema = a.schema({
       message: a.string(),
     })
     .returns(a.string())
-    .handler(a.handler.function(chatapi)),
+    .handler(a.handler.function(chatapi))
+    .authorization(allow => [allow.authenticated()]),
   Todo: a
     .model({
       content: a.string(),
