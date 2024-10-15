@@ -1,4 +1,5 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { chatapi } from "../functions/chatapi/resource"
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -7,6 +8,13 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
+  chatapi: a
+    .query()
+    .arguments({
+      message: a.string(),
+    })
+    .returns(a.string())
+    .handler(a.handler.function(chatapi)),
   Todo: a
     .model({
       content: a.string(),

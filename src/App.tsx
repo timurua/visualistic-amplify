@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { TextField } from '@aws-amplify/ui-react';
 
 const client = generateClient<Schema>();
 
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [chatMessage, setChatMessage] = useState<string>("");
 
   const { user, signOut } = useAuthenticator();
 
@@ -20,6 +22,15 @@ function App() {
     client.models.Todo.create({ content: window.prompt("Todo content") });
   }
 
+  function chatapi() {
+    const reply = client.queries.chatapi({
+      message: "Hello",
+    })
+    if(reply !== null) {
+      setChatMessage(reply)
+    }
+  }
+
   function deleteTodo(id: string) {
     client.models.Todo.delete({ id })
   }  
@@ -28,6 +39,16 @@ function App() {
     <main>
       <h1>{user?.signInDetails?.loginId}'s todos</h1>
       <button onClick={createTodo}>+ new</button>
+      <div>
+        <TextField
+          label="Your Text"
+          value={chatMessage}
+          onChange={(e) => setChatMessage(e.target.value)}
+          placeholder="Type message..."
+        />
+        <button onClick={chatapi}>+ chat</button>
+      </div>
+      
       <ul>
         {todos.map((todo) => (
           <li key={todo.id} onClick={() => deleteTodo(todo.id)} >{todo.content}</li>
